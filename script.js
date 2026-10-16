@@ -185,6 +185,36 @@ const recipeGrid = document.querySelector("#recipe-grid");
 const recipeCount = document.querySelector("#recipe-count");
 const emptyMessage = document.querySelector("#empty-message");
 
+const STORAGE_KEY = "recipe-book-favourites";
+
+function loadFavouriteRecipes() {
+    try {
+        const savedFavourites = JSON.parse(
+            localStorage.getItem(STORAGE_KEY) || "[]"
+        );
+
+        if (!Array.isArray(savedFavourites)) {
+            return [];
+        }
+
+        return savedFavourites.filter((id) =>
+            recipes.some((recipe) => recipe.id === id)
+        );
+    } catch {
+        return [];
+    }
+}
+
+let favouriteRecipeIds = loadFavouriteRecipes();
+
+function saveFavouriteRecipes() {
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(favouriteRecipeIds)
+    );
+}
+
+
 
  // Display the supplied recipes as cards.
 function displayRecipes(recipeList) {
@@ -215,6 +245,18 @@ function displayRecipes(recipeList) {
                     >
                         View Recipe
                     </button>
+                    
+<button
+    type="button"
+    class="favourite-button"
+    data-favourite-id="${recipe.id}"
+    aria-pressed="${favouriteRecipeIds.includes(recipe.id)}"
+>
+    ${favouriteRecipeIds.includes(recipe.id)
+        ? "♥ Remove Favourite"
+        : "♡ Add Favourite"}
+</button>
+
                 </div>
             </article>
         `;
@@ -305,16 +347,34 @@ function openRecipeDetails(recipeId) {
 }
 
 // Handle clicks on recipe cards using event delegation.
-recipeGrid.addEventListener("click", (event) => {
-    const button = event.target.closest(".details-button");
 
-    if (!button) {
+recipeGrid.addEventListener("click", (event) => {
+    const favouriteButton = event.target.closest(".favourite-button");
+
+    if (favouriteButton) {
+        const recipeId = Number(favouriteButton.dataset.favouriteId);
+
+        if (favouriteRecipeIds.includes(recipeId)) {
+            favouriteRecipeIds = favouriteRecipeIds.filter(
+                (id) => id !== recipeId
+            );
+        } else {
+            favouriteRecipeIds.push(recipeId);
+        }
+
+        saveFavouriteRecipes();
+        filterRecipes();
         return;
     }
+
+    const button = event.target.closest(".details-button");
+
+    if (!button) return;
 
     const recipeId = Number(button.dataset.recipeId);
     openRecipeDetails(recipeId);
 });
+
 
 // Close the dialog when the close button is clicked.
 closeDialogButton.addEventListener("click", () => {
