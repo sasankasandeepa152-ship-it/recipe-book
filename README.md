@@ -66,4 +66,5 @@ Favourite recipes are saved in the browser's local storage. The saved favourites
 
 ## Author
 
-Dhanushka Akila Samaranayake
+sasanka sandeepa
+
