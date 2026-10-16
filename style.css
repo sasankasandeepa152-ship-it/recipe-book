@@ -190,3 +190,52 @@ a {
         transform: none;
     }
 }
+/* Recipe search and category filters */
+.recipe-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+    max-width: 760px;
+    margin: 28px 0 16px;
+}
+
+.recipe-controls label {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.recipe-controls input,
+.recipe-controls select {
+    width: 100%;
+    min-width: 0;
+    padding: 13px 14px;
+    border: 1px solid #d7ddd5;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #243128;
+    font: inherit;
+}
+
+.recipe-controls input:focus,
+.recipe-controls select:focus {
+    outline: 3px solid #b8d8c2;
+    outline-offset: 2px;
+}
+
+.recipe-count {
+    color: #667168;
+    font-size: 0.9rem;
+}
+
+.empty-message {
+    padding: 24px;
+    border-radius: 10px;
+    background: #eaf2e8;
+    text-align: center;
+}
+
+@media (max-width: 560px) {
+    .recipe-controls {
+        grid-template-columns: 1fr;
+    }
+}

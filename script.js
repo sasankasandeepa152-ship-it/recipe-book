@@ -178,5 +178,66 @@ function displayRecipes() {
     `;
 }
 
-// Render the recipes when the page loads.
-displayRecipes();
+// Get the recipe search controls and display elements.
+const searchInput = document.querySelector("#recipe-search");
+const categoryFilter = document.querySelector("#category-filter");
+const recipeGrid = document.querySelector("#recipe-grid");
+const recipeCount = document.querySelector("#recipe-count");
+const emptyMessage = document.querySelector("#empty-message");
+
+// Display the supplied recipes as cards.
+function displayRecipes(recipeList) {
+    recipeGrid.innerHTML = recipeList.map((recipe) => `
+        <article class="recipe-card">
+            <img
+                class="recipe-image"
+                src="${recipe.image}"
+                alt="${recipe.name}"
+                loading="lazy"
+            >
+
+            <div class="recipe-content">
+                <p class="recipe-category">${recipe.category}</p>
+                <h3>${recipe.name}</h3>
+                <p>${recipe.description}</p>
+
+                <div class="recipe-meta">
+                    <span>${recipe.cookingTime} min</span>
+                    <span>${recipe.difficulty}</span>
+                </div>
+            </div>
+        </article>
+    `).join("");
+
+    recipeCount.textContent =
+        `${recipeList.length} recipe${recipeList.length === 1 ? "" : "s"} found`;
+
+    emptyMessage.hidden = recipeList.length !== 0;
+}
+
+// Filter recipes using the search text and selected category.
+function filterRecipes() {
+    const searchText = searchInput.value.trim().toLowerCase();
+    const selectedCategory = categoryFilter.value;
+
+    const filteredRecipes = recipes.filter((recipe) => {
+        const matchesName = recipe.name
+            .toLowerCase()
+            .includes(searchText);
+
+        const matchesCategory =
+            selectedCategory === "all" ||
+            recipe.category === selectedCategory;
+
+        return matchesName && matchesCategory;
+    });
+
+    displayRecipes(filteredRecipes);
+}
+
+// Update the results when the user changes either control.
+searchInput.addEventListener("input", filterRecipes);
+categoryFilter.addEventListener("change", filterRecipes);
+
+// Display all recipes when the page first loads.
+filterRecipes();

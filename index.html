@@ -35,10 +35,50 @@
             </p>
         </section>
 
-        <section id="recipes" class="recipes-section" aria-labelledby="recipes-title">
-            <h2 id="recipes-title">Explore Recipes</h2>
-            <p>Discover simple ideas for your next meal.</p>
-        </section>
+        <section
+    id="recipes"
+    class="recipes-section"
+    aria-labelledby="recipes-title"
+>
+    <h2 id="recipes-title">Explore Recipes</h2>
+
+    <p class="section-description">
+        Discover simple ideas for your next meal.
+    </p>
+
+    <div class="recipe-controls">
+        <label for="recipe-search">Search recipes</label>
+
+        <input
+            type="search"
+            id="recipe-search"
+            placeholder="Search by recipe name..."
+            autocomplete="off"
+        >
+
+        <label for="category-filter">Filter by category</label>
+
+        <select id="category-filter">
+            <option value="all">All Categories</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+        </select>
+    </div>
+
+    <p
+        id="recipe-count"
+        class="recipe-count"
+        aria-live="polite"
+    ></p>
+
+    <div id="recipe-grid" class="recipe-grid"></div>
+
+    <p id="empty-message" class="empty-message" hidden>
+        No recipes found. Try another search.
+    </p>
+</section>
+
         <section id="about" class="about-section">
             <h2>About Recipe Book</h2>
             <p>
