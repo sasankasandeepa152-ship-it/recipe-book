@@ -267,7 +267,10 @@ function displayRecipes(recipeList) {
     recipeCount.textContent =
         `${recipeList.length} recipe${recipeList.length === 1 ? "" : "s"} found`;
 
-    emptyMessage.hidden = recipeList.length !== 0;
+    emptyMessage.textContent = recipeList.length === 0
+    ? "No recipes found. Try changing your search or filters."
+    : "";
+        emptyMessage.hidden = recipeList.length !== 0;
 }
 
 
