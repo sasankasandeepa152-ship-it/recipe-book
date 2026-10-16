@@ -182,6 +182,7 @@ function displayRecipes() {
 const searchInput = document.querySelector("#recipe-search");
 const categoryFilter = document.querySelector("#category-filter");
 const favouritesOnly = document.querySelector("#favourites-only");
+const sortRecipes = document.querySelector("#sort-recipes");
 const recipeGrid = document.querySelector("#recipe-grid");
 const recipeCount = document.querySelector("#recipe-count");
 const emptyMessage = document.querySelector("#empty-message");
@@ -291,6 +292,22 @@ function filterRecipes() {
         return matchesName && matchesCategory && matchesFavourite;
     });
 
+        const sortOption = sortRecipes.value;
+
+    if (sortOption === "name-asc") {
+        filteredRecipes.sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
+    } else if (sortOption === "time-asc") {
+        filteredRecipes.sort(
+            (a, b) => a.cookingTime - b.cookingTime
+        );
+    } else if (sortOption === "time-desc") {
+        filteredRecipes.sort(
+            (a, b) => b.cookingTime - a.cookingTime
+        );
+    }
+
     displayRecipes(filteredRecipes);
 }
 
@@ -387,3 +404,5 @@ recipeGrid.addEventListener("click", (event) => {
 closeDialogButton.addEventListener("click", () => {
     recipeDialog.close();
 });
+
+sortRecipes.addEventListener("change", filterRecipes);
