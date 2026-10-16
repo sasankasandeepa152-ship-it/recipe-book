@@ -181,6 +181,7 @@ function displayRecipes() {
 // Get the recipe search controls and display elements.
 const searchInput = document.querySelector("#recipe-search");
 const categoryFilter = document.querySelector("#category-filter");
+const favouritesOnly = document.querySelector("#favourites-only");
 const recipeGrid = document.querySelector("#recipe-grid");
 const recipeCount = document.querySelector("#recipe-count");
 const emptyMessage = document.querySelector("#empty-message");
@@ -270,28 +271,34 @@ function displayRecipes(recipeList) {
 
 
 // Filter recipes using the search text and selected category.
+
 function filterRecipes() {
     const searchText = searchInput.value.trim().toLowerCase();
     const selectedCategory = categoryFilter.value;
+    const showFavouritesOnly = favouritesOnly.checked;
 
     const filteredRecipes = recipes.filter((recipe) => {
-        const matchesName = recipe.name
-            .toLowerCase()
-            .includes(searchText);
+        const matchesName = recipe.name.toLowerCase().includes(searchText);
 
         const matchesCategory =
             selectedCategory === "all" ||
             recipe.category === selectedCategory;
 
-        return matchesName && matchesCategory;
+        const matchesFavourite =
+            !showFavouritesOnly ||
+            favouriteRecipeIds.includes(recipe.id);
+
+        return matchesName && matchesCategory && matchesFavourite;
     });
 
     displayRecipes(filteredRecipes);
 }
 
+
 // Update the results when the user changes either control.
 searchInput.addEventListener("input", filterRecipes);
 categoryFilter.addEventListener("change", filterRecipes);
+favouritesOnly.addEventListener("change", filterRecipes);
 
 // Display all recipes when the page first loads.
 filterRecipes();
