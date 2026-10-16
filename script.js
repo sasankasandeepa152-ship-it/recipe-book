@@ -185,35 +185,47 @@ const recipeGrid = document.querySelector("#recipe-grid");
 const recipeCount = document.querySelector("#recipe-count");
 const emptyMessage = document.querySelector("#empty-message");
 
-// Display the supplied recipes as cards.
+
+ // Display the supplied recipes as cards.
 function displayRecipes(recipeList) {
-    recipeGrid.innerHTML = recipeList.map((recipe) => `
-        <article class="recipe-card">
-            <img
-                class="recipe-image"
-                src="${recipe.image}"
-                alt="${recipe.name}"
-                loading="lazy"
-            >
+    recipeGrid.innerHTML = recipeList.map((recipe) => {
+        return `
+            <article class="recipe-card">
+                <img
+                    class="recipe-image"
+                    src="${recipe.image}"
+                    alt="${recipe.name}"
+                    loading="lazy"
+                >
 
-            <div class="recipe-content">
-                <p class="recipe-category">${recipe.category}</p>
-                <h3>${recipe.name}</h3>
-                <p>${recipe.description}</p>
+                <div class="recipe-content">
+                    <p class="recipe-category">${recipe.category}</p>
+                    <h3>${recipe.name}</h3>
+                    <p>${recipe.description}</p>
 
-                <div class="recipe-meta">
-                    <span>${recipe.cookingTime} min</span>
-                    <span>${recipe.difficulty}</span>
+                    <div class="recipe-meta">
+                        <span>${recipe.cookingTime} min</span>
+                        <span>${recipe.difficulty}</span>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="details-button"
+                        data-recipe-id="${recipe.id}"
+                    >
+                        View Recipe
+                    </button>
                 </div>
-            </div>
-        </article>
-    `).join("");
+            </article>
+        `;
+    }).join("");
 
     recipeCount.textContent =
         `${recipeList.length} recipe${recipeList.length === 1 ? "" : "s"} found`;
 
     emptyMessage.hidden = recipeList.length !== 0;
 }
+
 
 // Filter recipes using the search text and selected category.
 function filterRecipes() {
@@ -241,3 +253,70 @@ categoryFilter.addEventListener("change", filterRecipes);
 
 // Display all recipes when the page first loads.
 filterRecipes();
+
+// Recipe details dialog elements.
+const recipeDialog = document.querySelector("#recipe-dialog");
+const recipeDetails = document.querySelector("#recipe-details");
+const closeDialogButton = document.querySelector("#close-dialog");
+
+// Display ingredients and instructions for a selected recipe.
+function openRecipeDetails(recipeId) {
+    const recipe = recipes.find((item) => item.id === recipeId);
+
+    if (!recipe) {
+        return;
+    }
+
+    const ingredientItems = recipe.ingredients
+        .map((ingredient) => `<li>${ingredient}</li>`)
+        .join("");
+
+    const instructionItems = recipe.instructions
+        .map((instruction) => `<li>${instruction}</li>`)
+        .join("");
+
+    recipeDetails.innerHTML = `
+        <img
+            class="details-image"
+            src="${recipe.image}"
+            alt="${recipe.name}"
+        >
+
+        <p class="recipe-category">${recipe.category}</p>
+
+        <p>${recipe.description}</p>
+
+        <p>
+            <strong>Cooking time:</strong> ${recipe.cookingTime} minutes
+        </p>
+
+        <p>
+            <strong>Difficulty:</strong> ${recipe.difficulty}
+        </p>
+
+        <h3>Ingredients</h3>
+        <ul>${ingredientItems}</ul>
+
+        <h3>Instructions</h3>
+        <ol>${instructionItems}</ol>
+    `;
+
+    recipeDialog.showModal();
+}
+
+// Handle clicks on recipe cards using event delegation.
+recipeGrid.addEventListener("click", (event) => {
+    const button = event.target.closest(".details-button");
+
+    if (!button) {
+        return;
+    }
+
+    const recipeId = Number(button.dataset.recipeId);
+    openRecipeDetails(recipeId);
+});
+
+// Close the dialog when the close button is clicked.
+closeDialogButton.addEventListener("click", () => {
+    recipeDialog.close();
+});
